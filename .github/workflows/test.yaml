@@ -1,4 +1,4 @@
-name: Test frontend
+name: Deploy frontend
 
 on:
   workflow_call:

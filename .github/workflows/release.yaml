@@ -1,4 +1,4 @@
-name: Release frontend
+name: Deploy frontend
 
 on:
   workflow_dispatch:
