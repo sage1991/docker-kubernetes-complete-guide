@@ -51,7 +51,7 @@ jobs:
           ls -al
 
       - name: Generate deployment package
-        run: zip -r -x ".git" deploy.zip .
+        run: zip -r deploy.zip . -x ./node_modules/\*
 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
