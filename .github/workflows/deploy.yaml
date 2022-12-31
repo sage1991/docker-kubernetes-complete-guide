@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -24,6 +24,13 @@ jobs:
       - name: Run test
         run: docker run -e CI=true harry/frontend-test yarn test
 
+  release:
+    needs: [test]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
       - name: Generate deployment package
         run: zip -r -x ".git" deploy.zip .
 
