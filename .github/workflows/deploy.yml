@@ -42,6 +42,11 @@ jobs:
       run:
         working-directory: ./frontend
     steps:
+      - name: Print current path
+        run: |
+          pwd
+          ls -al
+
       - name: Generate deployment package
         run: zip -r -x ".git" deploy.zip .
 
