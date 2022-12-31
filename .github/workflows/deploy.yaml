@@ -13,6 +13,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Print current path
+        run: |
+          pwd
+          ls -al
+
       - name: Signin docker
         run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
 
