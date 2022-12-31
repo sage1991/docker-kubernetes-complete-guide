@@ -57,7 +57,7 @@ jobs:
         uses: einaregilsson/beanstalk-deploy@v21
         with:
           aws_access_key: ${{secrets.AWS_ACCESS_KEY_ID}}
-          aws_secret_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_secret_key: ${{secrets.AWS_ACCESS_KEY_PASSWORD}}
           application_name: docker-kubernetes-copmplete-guide-frontend
           environment_name: Dockerkubernetescopmpleteguidefronte-env
           existing_bucket_name: elasticbeanstalk-ap-northeast-2-268758655568
