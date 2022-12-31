@@ -1,46 +1,56 @@
-# Getting Started with Create React App
+# Replace travis CI with GitHub action
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1. Navigate to your GitHub repository.
+2. Click Settings
+3. Click Secrets
+4. Click Actions
+5. Click New repository secret
+6. Create key/value pair secrets for AWS_ACCESS_KEY, AWS_SECRET_KEY, DOCKER_USERNAME, DOCKER_PASSWORD.
+   > Important - You do not need to create an environment or environment secrets.    
+   > Doing so will cause a failure of the action without making additional changes to the workflow file.
 
-## Available Scripts
+   ![example image](https://img-c.udemycdn.com/redactor/raw/q_and_a_edit/2022-10-18_15-42-51-274103e4e22764ebfbeb809f26fdea24.png)
 
-In the project directory, you can run:
+7. In your local development environment, create a `.github` directory at the root of your project
+8. Create a workflows directory inside the new `.github` directory
+9. In the workflows directory create a deploy.yaml file which should contain the following code (name does not matter):
+   - Remember to change your application_name, environment_name, existing_bucket_name, and region to the values used by your AWS EBS environment.
+   - Remember to check your default branch to see if it is main or master and update the branches field accordingly.
 
-### `yarn start`
+    ``` yaml
+    name: Deploy Frontend
+    on:
+      push:
+        branches:
+          - main # check your repo, your default branch might be master!
+     
+    jobs:
+      build:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v2
+          - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          - run: docker build -t cygnetops/react-test -f Dockerfile.dev .
+          - run: docker run -e CI=true cygnetops/react-test npm test
+     
+          - name: Generate deployment package
+            run: zip -r deploy.zip . -x '*.git*'
+     
+          - name: Deploy to EB
+            uses: einaregilsson/beanstalk-deploy@v18
+            with:
+              aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+              aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+              application_name: docker-gh
+              environment_name: Dockergh-env
+              existing_bucket_name: elasticbeanstalk-us-east-1-923445559289
+              region: us-east-1
+              version_label: ${{ github.sha }}
+              deployment_package: deploy.zip
+    ```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+10. Run the typical git add, commit and push commands
+11. Click Actions in the GitHub repository dashboard to view each step of the workflow.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+> Note - This code is using a well-supported marketplace action, more info can be found here:  
+> https://github.com/einaregilsson/beanstalk-deploy
