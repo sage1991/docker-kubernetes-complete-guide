@@ -13,7 +13,7 @@
 
 7. In your local development environment, create a `.github` directory at the root of your project
 8. Create a workflows directory inside the new `.github` directory
-9. In the workflows directory create a deploy.yaml file which should contain the following code (name does not matter):
+9. In the `workflows` directory create a deploy.yaml file which should contain the following code (name does not matter):
    - Remember to change your application_name, environment_name, existing_bucket_name, and region to the values used by your AWS EBS environment.
    - Remember to check your default branch to see if it is main or master and update the branches field accordingly.
 
