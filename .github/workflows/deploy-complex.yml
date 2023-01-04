@@ -54,6 +54,12 @@ jobs:
             -f docker/Dockerfile \
             .
 
+      - name: Signin to docker
+        run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Push image to docker hub
+        run: docker push harry/complex-client
+
   build-server:
     needs: [test]
     runs-on: ubuntu-latest
@@ -76,6 +82,12 @@ jobs:
             -f docker/Dockerfile \
             .
 
+      - name: Signin to docker
+        run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Push image to docker hub
+        run: docker push harry/complex-server
+
   build-nginx:
     needs: [test]
     runs-on: ubuntu-latest
@@ -96,6 +108,12 @@ jobs:
           docker build \
             -t harry/complex-nginx \
             .
+
+      - name: Signin to docker
+        run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Push image to docker hub
+        run: docker push harry/complex-nginx
 
   build-worker:
     needs: [test]
@@ -118,3 +136,9 @@ jobs:
             -t harry/complex-worker \
             -f docker/Dockerfile \
             .
+
+      - name: Signin to docker
+        run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Push image to docker hub
+        run: docker push harry/complex-worker
