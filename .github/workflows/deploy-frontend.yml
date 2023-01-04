@@ -1,4 +1,4 @@
-name: Deploy frontend
+name: Deploy single container application (frontend)
 
 on:
   workflow_dispatch:

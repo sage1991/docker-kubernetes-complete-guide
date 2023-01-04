@@ -1,0 +1,33 @@
+name: Deploy multi-container application (complex)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./complex
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Print current path
+        run: |
+          pwd
+          ls -al
+      
+      - name: Build test image
+        run: |
+          docker build \
+            -t harry/complex-client-test \
+            -f complex-client/docker/Dockerfile.development \
+            ./complex-client
+
+      - name: Run test
+        run: |
+          docker run \
+            -e CI=true \
+            harry/complex-client-test \
+            yarn test
