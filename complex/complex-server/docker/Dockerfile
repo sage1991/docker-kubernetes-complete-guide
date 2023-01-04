@@ -11,4 +11,6 @@ WORKDIR /app
 COPY --from=dependency /app/node_modules ./node_modules
 COPY . .
 
+EXPOSE 6000
+
 CMD ["yarn", "start"]
