@@ -38,7 +38,7 @@ export const HomePage: FC = () => {
     <div>
       <form onSubmit={onIndexSubmit}>
         <label htmlFor="index">Enter your index:</label>
-        <input id="index" type="text" onChange={onIndexChange} />
+        <input id="index" type="text" value={index} onChange={onIndexChange} />
         <button type="submit">Submit</button>
       </form>
       <h3>Indexes I have seen:</h3>
