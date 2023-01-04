@@ -21,7 +21,7 @@ jobs:
       - name: Build test image
         run: |
           docker build \
-            -t harry/complex-client-test \
+            -t harry1991/complex-client-test \
             -f complex-client/docker/Dockerfile.development \
             ./complex-client
 
@@ -29,7 +29,7 @@ jobs:
         run: |
           docker run \
             -e CI=true \
-            harry/complex-client-test \
+            harry1991/complex-client-test \
             yarn test
 
   build-client:
@@ -50,7 +50,7 @@ jobs:
       - name: Build client image
         run: |
           docker build \
-            -t harry/complex-client \
+            -t harry1991/complex-client \
             -f docker/Dockerfile \
             .
 
@@ -58,7 +58,7 @@ jobs:
         run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
 
       - name: Push image to docker hub
-        run: docker push harry/complex-client
+        run: docker push harry1991/complex-client
 
   build-server:
     needs: [test]
@@ -78,7 +78,7 @@ jobs:
       - name: Build server image
         run: |
           docker build \
-            -t harry/complex-server \
+            -t harry1991/complex-server \
             -f docker/Dockerfile \
             .
 
@@ -86,7 +86,7 @@ jobs:
         run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
 
       - name: Push image to docker hub
-        run: docker push harry/complex-server
+        run: docker push harry1991/complex-server
 
   build-nginx:
     needs: [test]
@@ -106,14 +106,14 @@ jobs:
       - name: Build nginx image
         run: |
           docker build \
-            -t harry/complex-nginx \
+            -t harry1991/complex-nginx \
             .
 
       - name: Signin to docker
         run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
 
       - name: Push image to docker hub
-        run: docker push harry/complex-nginx
+        run: docker push harry1991/complex-nginx
 
   build-worker:
     needs: [test]
@@ -133,7 +133,7 @@ jobs:
       - name: Build worker image
         run: |
           docker build \
-            -t harry/complex-worker \
+            -t harry1991/complex-worker \
             -f docker/Dockerfile \
             .
 
@@ -141,4 +141,4 @@ jobs:
         run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
 
       - name: Push image to docker hub
-        run: docker push harry/complex-worker
+        run: docker push harry1991/complex-worker
