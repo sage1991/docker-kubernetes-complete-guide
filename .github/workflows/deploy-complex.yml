@@ -25,12 +25,12 @@ jobs:
             -f complex-client/docker/Dockerfile.development \
             ./complex-client
 
-#      - name: Run test
-#        run: |
-#          docker run \
-#            -e CI=true \
-#            harry/complex-client-test \
-#            yarn test
+      - name: Run test
+        run: |
+          docker run \
+            -e CI=true \
+            harry/complex-client-test \
+            yarn test
 
   build-client:
     needs: [test]
