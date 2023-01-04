@@ -1,0 +1,52 @@
+version: "3"
+services:
+  nginx:
+    depends_on:
+      - complex-client
+      - complex-server
+    restart: always
+    build:
+      context: ./complex-nginx
+      dockerfile: ./Dockerfile.development
+    ports:
+      - "80:80"
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=postgres_password
+  redis:
+    image: redis:latest
+  complex-server:
+    depends_on:
+      - postgres
+      - redis
+    build:
+      context: ./complex-server
+      dockerfile: ./docker/Dockerfile.development
+    volumes:
+      - ./complex-server:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PG_USER=postgres
+      - PG_HOST=postgres
+      - PG_DATABASE=postgres
+      - PG_PASSWORD=postgres_password
+      - PG_PORT=5432
+  complex-client:
+    build:
+      context: ./complex-client
+      dockerfile: ./docker/Dockerfile.development
+    volumes:
+      - ./complex-client:/app
+  complex-worker:
+    depends_on:
+      - redis
+    build:
+      context: ./complex-worker
+      dockerfile: ./docker/Dockerfile.development
+    volumes:
+      - ./complex-worker:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
