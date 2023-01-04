@@ -17,6 +17,6 @@ const fib = (index) => {
 }
 
 sub.on("message", (channel, message) => {
-  client.v4.hset("values", message, fib(parseInt(message)))
+  client.hset("values", message, fib(parseInt(message)))
 })
 sub.subscribe("insert")

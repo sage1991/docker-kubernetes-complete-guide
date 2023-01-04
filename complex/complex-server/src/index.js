@@ -20,9 +20,9 @@ const pgClient = new Pool({
 })
 
 pgClient.on("error", () => console.log("Lost pg connection"))
-pgClient.on("connect", () => {
-  pgClient
-    .query("CREATE TABLE IF NOT EXIST values (number INT)")
+pgClient.on("connect", (client) => {
+  client
+    .query("CREATE TABLE IF NOT EXISTS values (number INT)")
     .catch((error) => console.log(error))
 })
 
@@ -31,7 +31,7 @@ const redis = require("redis")
 const redisClient = redis.createClient({
   host: keys.redisHost,
   port: keys.redisPort,
-  retry_strategy: () => 1000
+  retry_strategy: () => 1000,
 })
 const redisPublisher = redisClient.duplicate()
 
@@ -45,18 +45,20 @@ app.get("/values/all", async (req, res) => {
   res.send(values.rows)
 })
 
-app.get("/values/current", async (req, res) => {
-  const values = await redisClient.v4.hGetAll("values")
-  res.send(values)
+app.get("/values/current", (req, res) => {
+  redisClient.hgetall("values", (error, values) => {
+    res.send(values)
+  })
 })
 
-app.post("/values", async (req, res) => {
+app.post("/values", (req, res) => {
   const { index } = req.body
   if (parseInt(index) > 40) {
     return res.status(422).send("Index too high")
   }
-  await redisClient.v4.hSet("values", index, "Nothing yet!")
-  await redisPublisher.publish("insert", index)
+
+  redisClient.hset("values", index, "Nothing yet!")
+  redisPublisher.publish("insert", index)
   pgClient.query("INSERT INTO values(number) VALUES($1)", [index])
 
   res.send({ working: true })
