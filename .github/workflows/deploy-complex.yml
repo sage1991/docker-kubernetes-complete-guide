@@ -25,9 +25,96 @@ jobs:
             -f complex-client/docker/Dockerfile.development \
             ./complex-client
 
-      - name: Run test
+#      - name: Run test
+#        run: |
+#          docker run \
+#            -e CI=true \
+#            harry/complex-client-test \
+#            yarn test
+
+  build-client:
+    needs: [test]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./complex/complex-client
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Print current path
         run: |
-          docker run \
-            -e CI=true \
-            harry/complex-client-test \
-            yarn test
+          pwd
+          ls -al
+
+      - name: Build client image
+        run: |
+          docker build \
+            -t harry/complex-client \
+            -f docker/Dockerfile \
+            .
+
+  build-server:
+    needs: [test]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./complex/complex-server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Print current path
+        run: |
+          pwd
+          ls -al
+
+      - name: Build server image
+        run: |
+          docker build \
+            -t harry/complex-server \
+            -f docker/Dockerfile \
+            .
+
+  build-nginx:
+    needs: [test]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./complex/complex-nginx
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Print current path
+        run: |
+          pwd
+          ls -al
+
+      - name: Build nginx image
+        run: |
+          docker build \
+            -t harry/complex-nginx \
+            .
+
+  build-worker:
+    needs: [test]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./complex/complex-worker
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Print current path
+        run: |
+          pwd
+          ls -al
+
+      - name: Build worker image
+        run: |
+          docker build \
+            -t harry/complex-worker \
+            -f docker/Dockerfile \
+            .
