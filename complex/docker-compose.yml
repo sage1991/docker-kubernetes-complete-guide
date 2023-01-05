@@ -1,0 +1,24 @@
+version: "3"
+services:
+  nginx:
+    image: harry1991/complex-nginx
+    restart: always
+    ports:
+      - "80:80"
+  complex-server:
+    image: harry1991/complex-server
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - PG_USER=$PG_USER
+      - PG_HOST=$PG_HOST
+      - PG_DATABASE=$PG_DATABASE
+      - PG_PASSWORD=$PG_PASSWORD
+      - PG_PORT=$PG_PORT
+  complex-client:
+    image: harry1991/complex-client
+  complex-worker:
+    image: harry1991/complex-worker
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
