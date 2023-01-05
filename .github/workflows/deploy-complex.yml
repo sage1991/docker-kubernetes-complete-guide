@@ -142,3 +142,33 @@ jobs:
 
       - name: Push image to docker hub
         run: docker push harry1991/complex-worker
+
+  release:
+    needs: [build-client, build-server, build-nginx, build-worker]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./complex
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Print current path
+        run: |
+          pwd
+          ls -al
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x ./node_modules/\*
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws_secret_key: ${{secrets.AWS_ACCESS_KEY_PASSWORD}}
+          application_name: multi-container-app
+          environment_name: Multicontainerapp-env
+          existing_bucket_name: elasticbeanstalk-ap-northeast-2-268758655568
+          region: ap-northeast-2
+          version_label: ${{github.sha}}
+          deployment_package: ./complex/deploy.zip
