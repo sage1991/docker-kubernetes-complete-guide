@@ -2,6 +2,9 @@ version: "3"
 services:
   nginx:
     image: harry1991/complex-nginx
+    depends_on:
+      - complex-server
+      - complex-client
     restart: always
     ports:
       - "80:80"
