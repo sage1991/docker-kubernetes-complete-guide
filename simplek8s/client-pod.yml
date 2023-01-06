@@ -7,6 +7,6 @@ metadata:
 spec:
   containers:
     - name: client
-      image: harry1991/complex-client
+      image: nginx
       ports:
-        - containerPort: 3000
+        - containerPort: 80
