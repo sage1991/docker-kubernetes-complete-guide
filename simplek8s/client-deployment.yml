@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: client
-          image: nginx
+          image: harry1991/complex-client
           ports:
-            - containerPort: 80
+            - containerPort: 3000
