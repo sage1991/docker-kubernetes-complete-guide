@@ -1,0 +1,32 @@
+name: Build complex-nginx
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build-nginx:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./complex/complex-nginx
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Print current path
+        run: |
+          pwd
+          ls -al
+
+      - name: Build nginx image
+        run: |
+          docker build \
+            -t harry1991/complex-nginx \
+            .
+
+      - name: Signin to docker
+        run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Push image to docker hub
+        run: docker push harry1991/complex-nginx

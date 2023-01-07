@@ -34,114 +34,19 @@ jobs:
 
   build-client:
     needs: [test]
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./complex/complex-client
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Print current path
-        run: |
-          pwd
-          ls -al
-
-      - name: Build client image
-        run: |
-          docker build \
-            -t harry1991/complex-client \
-            -f docker/Dockerfile \
-            .
-
-      - name: Signin to docker
-        run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
-
-      - name: Push image to docker hub
-        run: docker push harry1991/complex-client
+    uses: ./.github/workflows/build-complex-client.yml
 
   build-server:
     needs: [test]
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./complex/complex-server
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Print current path
-        run: |
-          pwd
-          ls -al
-
-      - name: Build server image
-        run: |
-          docker build \
-            -t harry1991/complex-server \
-            -f docker/Dockerfile \
-            .
-
-      - name: Signin to docker
-        run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
-
-      - name: Push image to docker hub
-        run: docker push harry1991/complex-server
+    uses: ./.github/workflows/build-complex-server.yml
 
   build-nginx:
     needs: [test]
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./complex/complex-nginx
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Print current path
-        run: |
-          pwd
-          ls -al
-
-      - name: Build nginx image
-        run: |
-          docker build \
-            -t harry1991/complex-nginx \
-            .
-
-      - name: Signin to docker
-        run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
-
-      - name: Push image to docker hub
-        run: docker push harry1991/complex-nginx
+    uses: ./.github/workflows/build-complex-nginx.yml
 
   build-worker:
     needs: [test]
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./complex/complex-worker
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Print current path
-        run: |
-          pwd
-          ls -al
-
-      - name: Build worker image
-        run: |
-          docker build \
-            -t harry1991/complex-worker \
-            -f docker/Dockerfile \
-            .
-
-      - name: Signin to docker
-        run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
-
-      - name: Push image to docker hub
-        run: docker push harry1991/complex-worker
+    uses: ./.github/workflows/build-complex-worker.yml
 
   release:
     needs: [build-client, build-server, build-nginx, build-worker]

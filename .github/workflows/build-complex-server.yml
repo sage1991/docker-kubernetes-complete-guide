@@ -1,0 +1,33 @@
+name: Build complex-server
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build-server:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./complex/complex-server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Print current path
+        run: |
+          pwd
+          ls -al
+
+      - name: Build server image
+        run: |
+          docker build \
+            -t harry1991/complex-server \
+            -f docker/Dockerfile \
+            .
+
+      - name: Signin to docker
+        run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Push image to docker hub
+        run: docker push harry1991/complex-server

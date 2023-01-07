@@ -1,0 +1,33 @@
+name: Build complex-worker
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build-worker:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./complex/complex-worker
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Print current path
+        run: |
+          pwd
+          ls -al
+
+      - name: Build worker image
+        run: |
+          docker build \
+            -t harry1991/complex-worker \
+            -f docker/Dockerfile \
+            .
+
+      - name: Signin to docker
+        run: docker login -u ${{secrets.DOCKER_USER_NAME}} -p ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Push image to docker hub
+        run: docker push harry1991/complex-worker
