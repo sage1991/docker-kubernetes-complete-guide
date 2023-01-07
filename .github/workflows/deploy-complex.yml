@@ -35,18 +35,22 @@ jobs:
   build-client:
     needs: [test]
     uses: ./.github/workflows/build-complex-client.yml
+    secrets: inherit
 
   build-server:
     needs: [test]
     uses: ./.github/workflows/build-complex-server.yml
+    secrets: inherit
 
   build-nginx:
     needs: [test]
     uses: ./.github/workflows/build-complex-nginx.yml
+    secrets: inherit
 
   build-worker:
     needs: [test]
     uses: ./.github/workflows/build-complex-worker.yml
+    secrets: inherit
 
   release:
     needs: [build-client, build-server, build-nginx, build-worker]
