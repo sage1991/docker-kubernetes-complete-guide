@@ -23,6 +23,7 @@ jobs:
         run: |
           docker build \
             -t harry1991/complex-nginx \
+            -t harry1991/complex-nginx:${{github.sha}} \
             .
 
       - name: Signin to docker

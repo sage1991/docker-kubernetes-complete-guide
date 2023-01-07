@@ -23,6 +23,7 @@ jobs:
         run: |
           docker build \
             -t harry1991/complex-worker \
+            -t harry1991/complex-worker:${{github.sha}} \
             -f docker/Dockerfile \
             .
 
