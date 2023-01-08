@@ -17,3 +17,5 @@ spec:
           image: harry1991/complex-client
           ports:
             - containerPort: 3000
+      nodeSelector:
+        hostname: jane.com
